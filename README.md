@@ -3,8 +3,8 @@
 RxSwift sample code executable as script.
 
 ## Recommended environment
-MacOS: 10.14.5
-Swift: 5.1.2
+- MacOS: 10.14.5
+- Swift: 5.1.2
 
 ## Usage
 
