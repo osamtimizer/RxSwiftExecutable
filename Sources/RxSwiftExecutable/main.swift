@@ -11,32 +11,34 @@ let secondObservable = BehaviorRelay<Int>(value: 100)
 // Generate Cold Observables from Hot Observables
 let coldFirstObservable = firstObservable
   .flatMap(Observable.from(optional:))
-  .map { str in
-    str + " from cold observable"
+  .map { str -> String in
+    print("in cold first observable")
+    return str + " from cold first observable"
   }
 
 let coldSecondObservable = secondObservable
   .map { int -> String in
-    print("in cold observable")
-    print("you got \(int), but never reterned")
-    print("this closure will be called for each subscriber")
-    return "This is return value"
+    print("in cold observable, you got \(int)")
+    return "This is return value with \(int)"
    }
 
 let coldSharedSecondObservable = secondObservable
   .map { int -> String in
-    print("in cold shared observable")
-    print("this closure will be called only once")
-    return "This is return value from shared"
+    print("in cold shared observable, you got \(int)")
+    return "This is return value from shared with \(int)"
    }
    .share()
 
-firstObservable.flatMap(Observable.from(optional:))
+firstObservable
   .subscribe(onNext: { str in
-    print(str)
+    guard let result = str else {
+      print("got nil")
+      return
+    }
+    print(result)
   })
 
-secondObservable.map { int in int * 200 }
+secondObservable
   .subscribe(onNext: { int in
     print(int)
   })
@@ -50,9 +52,9 @@ coldFirstObservable
 
 firstObservable.accept(nil)
 firstObservable.accept("after nil")
+firstObservable.accept("after nil2")
 
 secondObservable.accept(5)
-secondObservable.accept(12)
 
 coldSecondObservable
   .subscribe(onNext: { str in
@@ -65,16 +67,14 @@ coldSecondObservable
 
 coldSharedSecondObservable
   .subscribe(onNext: { str in
-    print(str)
+    print("subscriber1, got \(str)")
   })
 
 coldSharedSecondObservable
   .subscribe(onNext: { str in
-    print(str)
+    print("subscriber2, got \(str)")
   })
 
-secondObservable.accept(100)
-secondObservable.accept(40)
-secondObservable.accept(2)
+secondObservable.accept(20)
 
 print("main end")
