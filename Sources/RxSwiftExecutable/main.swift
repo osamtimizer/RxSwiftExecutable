@@ -16,6 +16,14 @@ let coldFirstObservable = firstObservable
     return str + " from cold first observable"
   }
 
+let coldFirstSharedObservable = firstObservable
+  .flatMap(Observable.from(optional:))
+  .map { str -> String in
+    print("in cold first shared observable")
+    return str + " from cold first shared observable"
+  }
+  .share()
+
 let coldSecondObservable = secondObservable
   .map { int -> String in
     print("in cold observable, you got \(int)")
@@ -43,12 +51,27 @@ secondObservable
     print(int)
   })
 
-firstObservable.accept("before nil")
+coldFirstObservable
+  .subscribe(onNext: { str in
+    print(str)
+  })
 
 coldFirstObservable
   .subscribe(onNext: { str in
     print(str)
   })
+
+coldFirstSharedObservable
+  .subscribe(onNext: { str in
+    print(str)
+  })
+
+coldFirstSharedObservable
+  .subscribe(onNext: { str in
+    print(str)
+  })
+
+firstObservable.accept("before nil")
 
 firstObservable.accept(nil)
 firstObservable.accept("after nil")
