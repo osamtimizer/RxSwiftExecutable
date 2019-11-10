@@ -4,7 +4,7 @@ import Foundation
 
 print("main start")
 
-// These are Hold Observables
+// These are Hot Observables
 let firstObservable = PublishRelay<String?>()
 let secondObservable = BehaviorRelay<Int>(value: 100)
 
